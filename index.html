@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Многопоточный сервер</title>
+    <title>Многопоточный веб-сервер</title>
     
     <!-- Подключение шрифта Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -19,166 +19,423 @@
         
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 30px;
             color: #fff;
             text-align: center;
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .main-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            line-height: 1.2;
-            background: linear-gradient(45deg, #fff, #f0f0f0);
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            line-height: 1.1;
+            background: linear-gradient(45deg, #ffffff, #d1fae5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.5px;
         }
         
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 400;
-            margin-bottom: 40px;
-            opacity: 0.9;
-            line-height: 1.6;
+            margin-bottom: 50px;
+            opacity: 0.95;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
         }
         
         .server-info {
             background: rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .info-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #4ade80;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .feature h3 {
-            color: #60a5fa;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-        
-        .feature p {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            opacity: 0.9;
-        }
-        
-        .status-indicator {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #34d399;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
-            margin-top: 20px;
+        }
+        
+        .info-title::before {
+            content: "⚡";
+            font-size: 2rem;
+        }
+        
+        .server-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: left;
+        }
+        
+        .detail-item {
             padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border-left: 4px solid #34d399;
+        }
+        
+        .detail-item strong {
+            color: #a7f3d0;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-item span {
+            font-size: 1.2rem;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 30px;
+            border-radius: 18px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #34d399, #10b981);
+        }
+        
+        .feature:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature h3 {
+            color: #a7f3d0;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature h3::before {
+            content: "✓";
+            background: #10b981;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .feature p {
+            font-size: 1rem;
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px auto;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(16, 185, 129, 0.1));
+            border-radius: 50px;
+            border: 2px solid rgba(52, 211, 153, 0.4);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
         }
         
         .status-dot {
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             background-color: #10b981;
             border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        
-        .status-text {
-            font-weight: 600;
-            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
         }
         
         @keyframes pulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+                transform: scale(1);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+                box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+                transform: scale(1.1);
             }
             100% {
                 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+                transform: scale(1);
             }
         }
         
+        .status-text {
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ffffff, #a7f3d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .url-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .url-box h3 {
+            color: #34d399;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .url {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            word-break: break-all;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .url:hover {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #34d399;
+        }
+        
         .footer {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            opacity: 0.7;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 20px;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 25px;
+            width: 100%;
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
         }
         
         @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+            
             .main-title {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .server-details,
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.2rem;
             }
             
             .container {
                 padding: 25px;
             }
             
-            .features {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: 2rem;
+            .server-info {
+                padding: 25px;
             }
             
-            body {
-                padding: 10px;
+            .status-indicator {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="main-title">РАБОЧИЙ МНОГОПОТОЧНЫЙ СЕРВЕР</h1>
+        <h1 class="main-title">🌿 МНОГОПОТОЧНЫЙ СЕРВЕР</h1>
         
         <p class="subtitle">
-            Высокопроизводительный сервер с поддержкой многопоточности для обработки параллельных запросов
+            Современный высокопроизводительный веб-сервер с поддержкой многопоточности, 
+            способный обрабатывать тысячи одновременных подключений
         </p>
+        
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <div class="status-text">Сервер активен и работает</div>
+        </div>
+        
+        <div class="server-info">
+            <div class="info-title">Информация о сервере</div>
+            <div class="server-details">
+                <div class="detail-item">
+                    <strong>Порт</strong>
+                    <span>8000</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Протокол</strong>
+                    <span>HTTP/1.1</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Статус</strong>
+                    <span style="color: #34d399;">● Активен</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Потоков</strong>
+                    <span>Многопоточный</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="url-box">
+            <h3>Доступ к серверу:</h3>
+            <div class="url">http://localhost:8000</div>
+            <div class="url">http://192.168.1.64:8000</div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>Высокая скорость</h3>
+                <p>Оптимизированная обработка запросов обеспечивает минимальное время отклика даже при высокой нагрузке.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Многопоточность</h3>
+                <p>Каждый клиент обслуживается в отдельном потоке, что позволяет обрабатывать множество запросов параллельно.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Стабильность</h3>
+                <p>Надежная работа 24/7 с автоматическим восстановлением после сбоев и обработкой ошибок.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Доступность</h3>
+                <p>Доступен как локально, так и из любой точки вашей сети через IP-адрес сервера.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Веб-сервер на C++ | Многопоточная архитектура</p>
+            <p>© 2024 | Все системы работают в штатном режиме</p>
+        </div>
+    </div>
+    
+    <script>
+        // Простой скрипт для обновления статуса
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация появления элементов
+            const features = document.querySelectorAll('.feature');
+            features.forEach((feature, index) => {
+                feature.style.animationDelay = `${index * 0.1}s`;
+                feature.style.animation = 'fadeIn 0.5s ease-out forwards';
+                feature.style.opacity = '0';
+            });
+            
+            // Обновление времени работы
+            function updateUptime() {
+                const startTime = Date.now();
+                setInterval(() => {
+                    const uptime = Date.now() - startTime;
+                    const hours = Math.floor(uptime / (1000 * 60 * 60));
+                    const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    const uptimeElement = document.querySelector('.detail-item:nth-child(3) span');
+                    if (uptimeElement && uptimeElement.textContent.includes('●')) {
+                        uptimeElement.innerHTML = `● Активен ${hours}ч ${minutes}м`;
+                    }
+                }, 60000); // Обновлять каждую минуту
+            }
+            
+            updateUptime();
+            
+            // Пульсация статус-индикатора
+            const statusDot = document.querySelector('.status-dot');
+            setInterval(() => {
+                statusDot.style.animation = 'none';
+                setTimeout(() => {
+                    statusDot.style.animation = 'pulse 1.5s infinite';
+                }, 10);
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
