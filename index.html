@@ -1,24 +1,70 @@
-<div class="status-dot"></div>
-        <div class="status-text">Сервер активен</div>
+font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .url-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .url-box h3 {
+            color: #34d399;
+            margin-bottom: 15px;
+        }
+
+        .url {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1 class="main-title">🌿 МНОГОПОТОЧНЫЙ СЕРВЕР</h1>
+
+    <p class="subtitle">
+        Современный высокопроизводительный веб-сервер с поддержкой многопоточности
+    </p>
+
+    <div class="status-indicator">
+        <div class="status-dot"></div>
+        <div class="status-text">Сервер активен и работает</div>
     </div>
 
     <div class="server-info">
         <div class="server-details">
             <div class="detail-item">
                 <strong>Порт</strong>
-                8000
+                <span>8000</span>
             </div>
             <div class="detail-item">
                 <strong>Протокол</strong>
-                HTTP/1.1
+                <span>HTTP/1.1</span>
             </div>
             <div class="detail-item">
                 <strong>Статус</strong>
-                ● Активен
+                <span style="color:#34d399;">● Активен</span>
             </div>
             <div class="detail-item">
                 <strong>Архитектура</strong>
-                Многопоточная
+                <span>Многопоточная</span>
             </div>
         </div>
     </div>
@@ -32,3 +78,4 @@
 </div>
 </body>
 </html>
+
